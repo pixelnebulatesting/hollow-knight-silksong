@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <base href="https://cdn.jsdelivr.net/gh/web-ports/hollow-knight-silksong@master/">
+    <base href="https://cdn.jsdelivr.net/gh/pixelnebulatesting/hollow-knight-silksong@master/">
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity Web Player | Hollow Knight SilkSong</title>
@@ -24,9 +24,8 @@
 
 <script>
 const loadingText = document.querySelector("#loading-text");
-const CACHE_NAME = "hksilksongcache-v2"; // bump version if needed
+const CACHE_NAME = "hksilksongcache-v2";
 
-/* ================= FETCH OVERRIDE ================= */
 const originalFetch = window.fetch;
 
 window.fetch = async function(resource, options) {
@@ -43,7 +42,6 @@ window.fetch = async function(resource, options) {
   return originalFetch(resource, options);
 };
 
-/* ================= CACHE CHECK ================= */
 async function isCached() {
   const cache = await caches.open(CACHE_NAME);
   const done = await cache.match("CACHE_COMPLETE");
@@ -63,7 +61,6 @@ async function cleanupOldCaches() {
   );
 }
 
-/* ================= UNZIP ================= */
 async function unzipAndStore(zipBlob) {
   if (!zipBlob) {
     throw new Error("ZIP is missing");
@@ -105,7 +102,6 @@ async function unzipAndStore(zipBlob) {
   console.log("Cache complete");
 }
 
-/* ================= DOWNLOAD ================= */
 let loadedBytes = 0;
 
 async function fetchWithProgress(url) {
@@ -145,7 +141,6 @@ async function fetchWithProgress(url) {
   return fullBuffer.buffer;
 }
 
-/* ================= MERGE ================= */
 async function mergeFiles(parts) {
   console.log("Downloading parts:", parts.length);
 
@@ -156,7 +151,6 @@ async function mergeFiles(parts) {
   return new Blob(buffers);
 }
 
-/* ================= UTIL ================= */
 function getParts(file, start, end) {
   let parts = [];
   for (let i = start; i <= end; i++) {
@@ -165,7 +159,6 @@ function getParts(file, start, end) {
   return parts;
 }
 
-/* ================= MAIN ================= */
 (async () => {
   try {
     await cleanupOldCaches(); 
@@ -181,7 +174,6 @@ function getParts(file, start, end) {
       loadingText.textContent = "LOADING FROM CACHE...";
     }
 
-    /* ================= UNITY START ================= */
     const canvas = document.querySelector("#unity-canvas");
     const loadingBar = document.querySelector("#unity-loading-bar");
     const progressBarFull = document.querySelector("#unity-progress-bar-full");
@@ -219,7 +211,7 @@ function getParts(file, start, end) {
       frameworkUrl: buildUrl + "/w-pt.framework.js.unityweb",
       codeUrl: buildUrl + "/w-pt.wasm.unityweb",
       streamingAssetsUrl: "StreamingAssets",
-      companyName: "EDUrocks Group, Truffled, GN-Math",
+      companyName: "",
       productName: "Hollow Knight SilkSong",
       productVersion: "1.0",
       showBanner: unityShowBanner,
@@ -228,7 +220,7 @@ function getParts(file, start, end) {
     loadingBar.style.display = "block";
 
     const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/gh/web-ports/hollow-knight-silksong@latest/Build/w-pt.loader.js";
+    script.src = "https://cdn.jsdelivr.net/gh/pixelnebulatesting/hollow-knight-silksong@latest/Build/w-pt.loader.js";
 
     script.onload = () => {
       createUnityInstance(canvas, config, (progress) => {
